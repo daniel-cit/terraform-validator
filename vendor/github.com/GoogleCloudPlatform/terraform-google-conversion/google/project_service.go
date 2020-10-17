@@ -28,17 +28,17 @@ func GetServiceUsageCaiObject(d TerraformResourceData, config *Config) (Asset, e
 
 func GetServiceUsageApiObject(d TerraformResourceData, config *Config) (map[string]interface{}, error) {
 	obj := make(map[string]interface{})
-	parentProp, err := expandServiceUsageParent(d.Get("project"), d, config)
+	parentProjectProp, err := expandServiceUsageParentProject(d.Get("project"), d, config)
 	if err != nil {
 		return nil, err
-	} else if v, ok := d.GetOkExists("project"); !isEmptyValue(reflect.ValueOf(parentProp)) && (ok || !reflect.DeepEqual(v, parentProp)) {
-		obj["parent"] = parentProp
+	} else if v, ok := d.GetOkExists("project"); !isEmptyValue(reflect.ValueOf(parentProjectProp)) && (ok || !reflect.DeepEqual(v, parentProjectProp)) {
+		obj["parent"] = parentProjectProp
 	}
-	serviceProp, err := expandServiceUsageService(d.Get("service"), d, config)
+	serviceNameProp, err := expandServiceUsageServiceName(d.Get("service"), d, config)
 	if err != nil {
 		return nil, err
-	} else if v, ok := d.GetOkExists("service"); !isEmptyValue(reflect.ValueOf(serviceProp)) && (ok || !reflect.DeepEqual(v, serviceProp)) {
-		obj["name"] = serviceProp
+	} else if v, ok := d.GetOkExists("service"); !isEmptyValue(reflect.ValueOf(serviceNameProp)) && (ok || !reflect.DeepEqual(v, serviceNameProp)) {
+		obj["name"] = serviceNameProp
 	}
 
 	obj["state"] = "ENABLED"
@@ -46,7 +46,7 @@ func GetServiceUsageApiObject(d TerraformResourceData, config *Config) (map[stri
 	return obj, nil
 }
 
-func expandServiceUsageParent(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandServiceUsageParentProject(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	if v == nil || v.(string) == "" {
 		// It does not try to construct anything from empty.
 		return "", nil
@@ -56,6 +56,6 @@ func expandServiceUsageParent(v interface{}, d TerraformResourceData, config *Co
 	return fmt.Sprintf("projects/%s", v.(string)), nil
 }
 
-func expandServiceUsageService(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandServiceUsageServiceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
